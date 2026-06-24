@@ -20,7 +20,7 @@ import type { Album, AuthResponse, Role, Song, User } from '../types';
  *   GET  /api/music/:id       (auth required)
  */
 
-const BASE = '/api';
+const BASE = import.meta.env.VITE_API_URL;
 const SESSION_KEY = 'rs_session';
 
 // ---------- Token helpers ----------
@@ -30,15 +30,6 @@ function saveSession(user: User, token: string): void {
 
 function clearSession(): void {
   localStorage.removeItem(SESSION_KEY);
-}
-
-export function getSession(): { user: User; token: string } | null {
-  try {
-    const raw = localStorage.getItem(SESSION_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
 }
 
 function getToken(): string | null {
@@ -248,7 +239,14 @@ export async function getMusicById(id: string): Promise<Song> {
   const raw = await get<RawSong>(`/music/${id}`);
   return normaliseSong(raw);
 }
-
+export function getSession(): { user: User; token: string } | null {
+  try {
+    const raw = localStorage.getItem('rs_session');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
 export async function createMusic(input: {
   title: string;
   genre: string;
