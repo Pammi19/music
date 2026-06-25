@@ -8,14 +8,20 @@ const musicRoutes = require('./routes/music.routes');
 
 const app = express();
 
+// app.use(cors({
+//     origin: [
+//     'http://localhost:5173',
+//     'https://inquisitive-shortbread-677826.netlify.app'
+//   ],
+//   credentials: true,
+// }));
 app.use(cors({
-    origin: [
-    'http://localhost:5173',
-    'https://inquisitive-shortbread-677826.netlify.app'
-  ],
-  credentials: true,
+  origin: function (origin, callback) {
+    console.log('Origin:', origin);
+    callback(null, true);
+  },
+  credentials: true
 }));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
